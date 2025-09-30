@@ -14,8 +14,8 @@ It supports user registration, JWT authentication, and basic user management.
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/nft-marketplace-backend.git
-   cd nft-marketplace-backend/backend
+   git clone https://github.com/LilitAsa/NFT-marketplace.git
+   cd backend
    ```
 
 2. Create and activate a virtual environment:
@@ -40,9 +40,14 @@ It supports user registration, JWT authentication, and basic user management.
 6. Start the development server:
    ```
    python manage.py runserver
-   ```
 
-## API Endpoints
+7. Open new terminal:
+   ```
+   cd frontend
+   npm run dev
+   ՝՝՝
+
+## API 1Endpoints
 
 - `POST /api/accounts/register/` — Register a new user
 - `POST /api/accounts/login/` — Obtain JWT token
