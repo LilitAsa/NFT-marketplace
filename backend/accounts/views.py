@@ -1,14 +1,19 @@
 from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.hashers import make_password
 from .models import User
-from .serializers import UserSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import RegisterSerializer, UserSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = RegisterSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(password=make_password(self.request.data['password']))
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
