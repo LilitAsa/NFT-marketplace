@@ -1,16 +1,24 @@
 from django.contrib import admin
 from django.urls import path, include
 from debug_toolbar.toolbar import debug_toolbar_urls
+<<<<<<< Updated upstream
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns 
 from django.views.i18n import set_language
+=======
+from rozetta import rozetta
+>>>>>>> Stashed changes
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< Updated upstream
     path("set_language/", set_language, name="set_language"),
     path("i18n/", include("django.conf.urls.i18n")),
+=======
+    path('rozetta/', rozetta.site.urls),
+>>>>>>> Stashed changes
     path('api/accounts/', include('accounts.urls')),
     path('api/nft/', include('nft.urls')),
 
