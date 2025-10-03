@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User
+from django.utils.translation import gettext_lazy as _
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,10 +21,10 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.filter(username=validated_data['username'])
         if user.exists():
-            raise serializers.ValidationError("Username already exists")
+            raise serializers.ValidationError(_("Username already exists"))
         user = User.objects.filter(email=validated_data['email'])
         if user.exists():
-            raise serializers.ValidationError("Email already exists")
+            raise serializers.ValidationError(_("Email already exists"))
         
         return User.objects.create_user(
             username=validated_data['username'],
@@ -33,3 +34,10 @@ class RegisterSerializer(serializers.ModelSerializer):
             last_name=validated_data.get('last_name', ''),
             role=validated_data.get('role', 'collector'),
         )
+
+    def validate_password(self, value):
+        if len(value) < 6:
+            raise serializers.ValidationError(
+                _("Пароль слишком короткий (Password too short)")
+            )
+        return value

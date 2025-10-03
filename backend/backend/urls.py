@@ -8,9 +8,9 @@ from django.views.i18n import set_language
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("set_language/", set_language, name="set_language"),
-    path("i18n/", include("django.conf.urls.i18n")),
+    path('rosetta/', include('rosetta.urls')),
+    path('set_language/', set_language, name='set_language'),
+    path('i18n/', include('django.conf.urls.i18n')),
     path('api/accounts/', include('accounts.urls')),
     path('api/nft/', include('nft.urls')),
 
@@ -18,10 +18,7 @@ urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
-    path('api/accounts/', include('accounts.urls')),
-    path('api/nft/', include('nft.urls')),
 )
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

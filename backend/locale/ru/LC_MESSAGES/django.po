@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-02 18:52+0300\n"
+"POT-Creation-Date: 2025-10-03 13:19+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,17 +20,37 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: .\backend\settings.py:147
-msgid "English"
-msgstr ""
+#: .\accounts\admin.py:11
+msgid "Main info"
+msgstr "Основная информация"
 
-#: .\backend\settings.py:148
-msgid "Russian"
-msgstr ""
+#: .\accounts\admin.py:12
+msgid "Personal details"
+msgstr "Личные данные"
 
-#: .\backend\settings.py:149
-msgid "Armenian"
-msgstr ""
+#: .\accounts\admin.py:13
+msgid "Permissions"
+msgstr "Разрешения"
+
+#: .\accounts\admin.py:14
+msgid "Important dates"
+msgstr "Важные даты"
+
+#: .\accounts\models.py:23
+msgid "Collector"
+msgstr "Коллекционер"
+
+#: .\accounts\models.py:24
+msgid "Pro User"
+msgstr "Про Пользователь"
+
+#: .\accounts\models.py:32
+msgid "First name"
+msgstr "Имя"
+
+#: .\accounts\models.py:33
+msgid "Last name"
+msgstr "Фамилия"
 
 #: .\venv\Lib\site-packages\_pytest\config\argparsing.py:474
 #, python-format
@@ -39,15 +59,15 @@ msgstr ""
 
 #: .\venv\Lib\site-packages\django\contrib\messages\apps.py:16
 msgid "Messages"
-msgstr ""
+msgstr "Сообщения"
 
 #: .\venv\Lib\site-packages\django\contrib\sitemaps\apps.py:8
 msgid "Site Maps"
-msgstr ""
+msgstr "Карта сайта"
 
 #: .\venv\Lib\site-packages\django\contrib\staticfiles\apps.py:9
 msgid "Static Files"
-msgstr ""
+msgstr "Статик файлы"
 
 #: .\venv\Lib\site-packages\django\contrib\syndication\apps.py:7
 msgid "Syndication"
@@ -73,7 +93,7 @@ msgstr ""
 
 #: .\venv\Lib\site-packages\django\core\validators.py:22
 msgid "Enter a valid value."
-msgstr ""
+msgstr "ВВедиде валидное значение"
 
 #: .\venv\Lib\site-packages\django\core\validators.py:70
 msgid "Enter a valid domain name."

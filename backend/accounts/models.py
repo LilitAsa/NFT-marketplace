@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.utils.translation import gettext_lazy as _
+
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, role="collector", **extra_fields):
@@ -18,8 +20,8 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
-        ("collector", "Collector"),
-        ("pro", "Pro User"),
+        ("collector", _("Collector")),
+        ("pro", _("Pro User")),
     ]
     
     username = models.CharField(max_length=150, unique=True)
@@ -27,8 +29,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="collector")
     is_active = models.BooleanField(default=True, null=True, blank=True)
     is_staff = models.BooleanField(default=False, null=True, blank=True)
-    first_name = models.CharField(max_length=150, blank=True, null=True)
-    last_name = models.CharField(max_length=150, blank=True, null=True)
+    first_name = models.CharField(_("First name"),max_length=150, blank=True, null=True)
+    last_name = models.CharField(_("Last name"), max_length=150, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     last_login = models.DateTimeField(auto_now=True, null=True, blank=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
