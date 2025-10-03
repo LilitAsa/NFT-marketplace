@@ -24,22 +24,27 @@ class User(AbstractBaseUser, PermissionsMixin):
         ("pro", _("Pro User")),
     ]
     
-    username = models.CharField(max_length=150, unique=True)
-    email = models.EmailField(unique=True)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="collector")
-    is_active = models.BooleanField(default=True, null=True, blank=True)
-    is_staff = models.BooleanField(default=False, null=True, blank=True)
+    username = models.CharField(_("Username"), max_length=150, unique=True)
+    email = models.EmailField(_("Email"), unique=True)
+    role = models.CharField(_("Role"), max_length=20, choices=ROLE_CHOICES, default="collector")
+    is_active = models.BooleanField(_("Is active"), default=True, null=True, blank=True)
+    is_staff = models.BooleanField(_("Is staff"), default=False, null=True, blank=True)
     first_name = models.CharField(_("First name"),max_length=150, blank=True, null=True)
     last_name = models.CharField(_("Last name"), max_length=150, blank=True, null=True)
-    date_joined = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    last_login = models.DateTimeField(auto_now=True, null=True, blank=True)
-    phone = models.CharField(max_length=20, blank=True, null=True)
+    date_joined = models.DateTimeField(_("Date joined"), auto_now_add=True, null=True, blank=True)
+    last_login = models.DateTimeField(_("Last Login"), auto_now=True, null=True, blank=True)
+    phone = models.CharField(_("Phone"), max_length=20, blank=True, null=True)
 
 
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
+    
+        
+    class Meta:
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")
     
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}".strip()

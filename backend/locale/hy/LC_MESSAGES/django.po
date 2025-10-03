@@ -8,27 +8,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 13:50+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2025-10-03 19:41+0300\n"
+"PO-Revision-Date: 2025-10-03 19:52+0000\n"
+"Last-Translator: None None <admin@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.10.2\n"
 
 #: .\accounts\admin.py:11
 msgid "Main info"
-msgstr ""
+msgstr "Հիմնական ինֆորմացիա"
 
 #: .\accounts\admin.py:12
 msgid "Personal details"
-msgstr ""
+msgstr "Անձնական տվյալներ"
 
 #: .\accounts\admin.py:13
 msgid "Permissions"
-msgstr ""
+msgstr "Թույլտվություններ"
 
 #: .\accounts\admin.py:14
 msgid "Important dates"
@@ -36,18 +37,452 @@ msgstr ""
 
 #: .\accounts\models.py:23
 msgid "Collector"
-msgstr ""
+msgstr "Կոլլեկցիոներ"
 
 #: .\accounts\models.py:24
 msgid "Pro User"
+msgstr "Պռո Օգտատեր"
+
+#: .\accounts\models.py:27
+msgid "Username"
 msgstr ""
+
+#: .\accounts\models.py:28
+msgid "Email"
+msgstr ""
+
+#: .\accounts\models.py:29
+msgid "Role"
+msgstr ""
+
+#: .\accounts\models.py:30
+msgid "Is active"
+msgstr ""
+
+#: .\accounts\models.py:31
+msgid "Is staff"
+msgstr "Անձնակազմ է"
 
 #: .\accounts\models.py:32
 msgid "First name"
-msgstr ""
+msgstr "Անուն"
 
 #: .\accounts\models.py:33
 msgid "Last name"
+msgstr "Ազգանուն"
+
+#: .\accounts\models.py:34
+msgid "Date joined"
+msgstr "Մտնելու ամսաթիվը"
+
+#: .\accounts\models.py:35
+#| msgid "Last name"
+msgid "Last Login"
+msgstr "Վերջին Մուտք"
+
+#: .\accounts\models.py:36
+msgid "Phone"
+msgstr "Հեռախոս"
+
+#: .\accounts\models.py:46
+#| msgid "Pro User"
+msgid "User"
+msgstr "Օգտատեր"
+
+#: .\accounts\models.py:47
+#| msgid "Pro User"
+msgid "Users"
+msgstr "Օգտատերեր"
+
+#: .\accounts\serializers.py:24
+msgid "Username already exists"
+msgstr "Անունը արդեն կա"
+
+#: .\accounts\serializers.py:27
+msgid "Email already exists"
+msgstr "Էլեկտրոնային փոստ արդեն կա"
+
+#: .\accounts\serializers.py:41
+msgid "Пароль слишком короткий (Password too short)"
+msgstr ""
+
+#: .\accounts\views.py:19
+msgid "Пользователь создан"
+msgstr "Օգտատերը ստեղծվել է"
+
+#: .\nft\models.py:7 .\nft\models.py:95 .\nft\models.py:101
+#| msgid "Last name"
+msgid "name"
+msgstr "Անուն"
+
+#: .\nft\models.py:8 .\nft\models.py:102
+msgid "description"
+msgstr "Նկարագրություն"
+
+#: .\nft\models.py:9 .\nft\models.py:39
+msgid "image"
+msgstr "Նկար"
+
+#: .\nft\models.py:29
+msgid "Minted"
+msgstr ""
+
+#: .\nft\models.py:30
+msgid "Listed for Sale"
+msgstr ""
+
+#: .\nft\models.py:31
+msgid "On Auction"
+msgstr ""
+
+#: .\nft\models.py:32
+msgid "Sold"
+msgstr "Վաճառվել է"
+
+#: .\nft\models.py:33
+msgid "Burned"
+msgstr "Այրվել է"
+
+#: .\nft\models.py:36
+msgid "Token id"
+msgstr "Տոկեն id"
+
+#: .\nft\models.py:37
+msgid "Name"
+msgstr "Անուն"
+
+#: .\nft\models.py:38
+msgid "Description"
+msgstr "Նկարագրություն"
+
+#: .\nft\models.py:40
+msgid "external url"
+msgstr ""
+
+#: .\nft\models.py:50
+msgid "creator"
+msgstr "Հեղինակ"
+
+#: .\nft\models.py:56
+msgid "previous owners"
+msgstr ""
+
+#: .\nft\models.py:60
+msgid "contract address"
+msgstr "Պայմանագրի հասցե "
+
+#: .\nft\models.py:61
+msgid "blockchain"
+msgstr ""
+
+#: .\nft\models.py:62
+msgid "token_standard"
+msgstr ""
+
+#: .\nft\models.py:63
+msgid "metadata url"
+msgstr "Մեթատվյալների url"
+
+#: .\nft\models.py:65
+msgid "category"
+msgstr ""
+
+#: .\nft\models.py:66
+msgid "tags"
+msgstr ""
+
+#: .\nft\models.py:68
+msgid "attributes"
+msgstr ""
+
+#: .\nft\models.py:69
+msgid "rarity_score"
+msgstr ""
+
+#: .\nft\models.py:71 .\nft\models.py:122
+msgid "price"
+msgstr ""
+
+#: .\nft\models.py:72 .\nft\models.py:182
+msgid "currency"
+msgstr ""
+
+#: .\nft\models.py:73
+msgid "is_listed"
+msgstr ""
+
+#: .\nft\models.py:74 .\nft\models.py:184
+msgid "status"
+msgstr ""
+
+#: .\nft\models.py:76
+msgid "likes"
+msgstr ""
+
+#: .\nft\models.py:77
+msgid "views"
+msgstr ""
+
+#: .\nft\models.py:79 .\nft\models.py:113 .\nft\models.py:167
+#: .\nft\models.py:189
+msgid "created at"
+msgstr ""
+
+#: .\nft\models.py:80 .\nft\models.py:208 .\nft\models.py:218
+msgid "updated at"
+msgstr ""
+
+#: .\nft\models.py:81
+msgid "minted at"
+msgstr ""
+
+#: .\nft\models.py:103
+msgid "banner image"
+msgstr ""
+
+#: .\nft\models.py:104
+msgid "featured image"
+msgstr ""
+
+#: .\nft\models.py:106 .\nft\models.py:120
+msgid "owner"
+msgstr ""
+
+#: .\nft\models.py:107
+msgid "nfts"
+msgstr ""
+
+#: .\nft\models.py:109 .\nft\models.py:216
+msgid "total volume"
+msgstr ""
+
+#: .\nft\models.py:110
+msgid "floor price"
+msgstr ""
+
+#: .\nft\models.py:112
+msgid "verified"
+msgstr ""
+
+#: .\nft\models.py:119 .\nft\models.py:131 .\nft\models.py:139
+#: .\nft\models.py:147 .\nft\models.py:179 .\nft\models.py:201
+msgid "nft"
+msgstr ""
+
+#: .\nft\models.py:121
+msgid "transaction_hash"
+msgstr ""
+
+#: .\nft\models.py:123 .\nft\models.py:132 .\nft\models.py:141
+#: .\nft\models.py:173 .\nft\models.py:194
+msgid "timestamp"
+msgstr ""
+
+#: .\nft\models.py:127
+msgid "Ownership histories"
+msgstr ""
+
+#: .\nft\models.py:130 .\nft\models.py:138 .\nft\models.py:192
+#: .\nft\models.py:211
+msgid "user"
+msgstr ""
+
+#: .\nft\models.py:140
+msgid "content"
+msgstr ""
+
+#: .\nft\models.py:148
+msgid "seller"
+msgstr ""
+
+#: .\nft\models.py:150
+msgid "start price"
+msgstr ""
+
+#: .\nft\models.py:151
+msgid "reserve price"
+msgstr ""
+
+#: .\nft\models.py:152
+msgid "current bid"
+msgstr ""
+
+#: .\nft\models.py:154
+msgid "start time"
+msgstr ""
+
+#: .\nft\models.py:155
+msgid "end time"
+msgstr ""
+
+#: .\nft\models.py:163
+msgid "highest bidder"
+msgstr ""
+
+#: .\nft\models.py:166
+msgid "active"
+msgstr ""
+
+#: .\nft\models.py:170
+msgid "auction"
+msgstr ""
+
+#: .\nft\models.py:171
+msgid "bidder"
+msgstr ""
+
+#: .\nft\models.py:172 .\nft\models.py:181
+msgid "amount"
+msgstr ""
+
+#: .\nft\models.py:180
+msgid "buyer"
+msgstr ""
+
+#: .\nft\models.py:183
+msgid "expires at"
+msgstr ""
+
+#: .\nft\models.py:193
+#, fuzzy
+#| msgid "Collector"
+msgid "collection"
+msgstr "Կոլլեկցիոներ"
+
+#: .\nft\models.py:202
+msgid "total views"
+msgstr ""
+
+#: .\nft\models.py:203
+msgid "total likes"
+msgstr ""
+
+#: .\nft\models.py:204
+msgid "total comments"
+msgstr ""
+
+#: .\nft\models.py:205
+msgid "last_sale price"
+msgstr ""
+
+#: .\nft\models.py:206
+msgid "average sale price"
+msgstr ""
+
+#: .\nft\models.py:212
+msgid "total nfts created"
+msgstr ""
+
+#: .\nft\models.py:213
+msgid "total nfts owned"
+msgstr ""
+
+#: .\nft\models.py:214
+msgid "total collections"
+msgstr ""
+
+#: .\nft\models.py:215
+msgid "total sales"
+msgstr ""
+
+#: .\nft\views.py:56
+msgid "Only owner can list for sale"
+msgstr ""
+
+#: .\nft\views.py:60
+msgid "Price is required"
+msgstr ""
+
+#: .\nft\views.py:67
+msgid "NFT listed for sale"
+msgstr ""
+
+#: .\nft\views.py:73
+msgid "Only owner can transfer NFT"
+msgstr ""
+
+#: .\nft\views.py:77
+msgid "New owner username is required"
+msgstr ""
+
+#: .\nft\views.py:82
+msgid "User not found"
+msgstr ""
+
+#: .\nft\views.py:96
+msgid "NFT transferred successfully"
+msgstr ""
+
+#: .\nft\views.py:146
+msgid "Only collection owner can add NFTs"
+msgstr ""
+
+#: .\nft\views.py:150 .\nft\views.py:168
+msgid "nft_id is required"
+msgstr ""
+
+#: .\nft\views.py:155
+msgid "NFT not found or you are not the owner"
+msgstr ""
+
+#: .\nft\views.py:158
+msgid "NFT added to collection"
+msgstr ""
+
+#: .\nft\views.py:164
+msgid "Only collection owner can remove NFTs"
+msgstr ""
+
+#: .\nft\views.py:173 .\nft\views.py:288 .\nft\views.py:318
+msgid "NFT not found"
+msgstr ""
+
+#: .\nft\views.py:176
+msgid "NFT removed from collection"
+msgstr ""
+
+#: .\nft\views.py:214 .\nft\views.py:219
+msgid "Auction has ended"
+msgstr ""
+
+#: .\nft\views.py:223
+msgid "Bid amount is required"
+msgstr ""
+
+#: .\nft\views.py:228
+msgid "Invalid bid amount"
+msgstr ""
+
+#: .\nft\views.py:231
+msgid "Bid must be higher than current bid"
+msgstr ""
+
+#: .\nft\views.py:234
+msgid "Bid must be at least the start price"
+msgstr ""
+
+#: .\nft\views.py:246
+msgid "Bid placed successfully"
+msgstr ""
+
+#: .\nft\views.py:253
+msgid "Only the seller can end the auction"
+msgstr ""
+
+#: .\nft\views.py:271
+msgid "Auction ended successfully"
+msgstr ""
+
+#: .\nft\views.py:326
+msgid "Only NFT owner can accept offers"
+msgstr ""
+
+#: .\nft\views.py:329
+msgid "Offer is not pending"
+msgstr ""
+
+#: .\nft\views.py:356
+msgid "Only NFT owner can reject offers"
 msgstr ""
 
 #: .\venv\Lib\site-packages\_pytest\config\argparsing.py:474
@@ -57,7 +492,7 @@ msgstr ""
 
 #: .\venv\Lib\site-packages\django\contrib\messages\apps.py:16
 msgid "Messages"
-msgstr ""
+msgstr "Նամակներ"
 
 #: .\venv\Lib\site-packages\django\contrib\sitemaps\apps.py:8
 msgid "Site Maps"
@@ -118,8 +553,8 @@ msgstr ""
 
 #: .\venv\Lib\site-packages\django\core\validators.py:297
 msgid ""
-"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
-"hyphens."
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or"
+" hyphens."
 msgstr ""
 
 #: .\venv\Lib\site-packages\django\core\validators.py:309
@@ -338,8 +773,8 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1570
 #, python-format
 msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
-"[TZ]) but it is an invalid date/time."
+"“%(value)s” value has the correct format (YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ]) but it is an invalid date/time."
 msgstr ""
 
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1575
@@ -518,7 +953,8 @@ msgid "Many-to-many relationship"
 msgstr ""
 
 #. Translators: If found as last label character, these punctuation
-#. characters will prevent the default label_suffix to be appended to the label
+#. characters will prevent the default label_suffix to be appended to the
+#. label
 #: .\venv\Lib\site-packages\django\forms\boundfield.py:185
 msgid ":?.!"
 msgstr ""
@@ -568,7 +1004,8 @@ msgstr ""
 
 #: .\venv\Lib\site-packages\django\forms\fields.py:644
 #, python-format
-msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid ""
+"Ensure this filename has at most %(max)d character (it has %(length)d)."
 msgid_plural ""
 "Ensure this filename has at most %(max)d characters (it has %(length)d)."
 msgstr[0] ""
@@ -675,7 +1112,8 @@ msgid "The inline value did not match the parent instance."
 msgstr ""
 
 #: .\venv\Lib\site-packages\django\forms\models.py:1450
-msgid "Select a valid choice. That choice is not one of the available choices."
+msgid ""
+"Select a valid choice. That choice is not one of the available choices."
 msgstr ""
 
 #: .\venv\Lib\site-packages\django\forms\models.py:1594
@@ -1135,10 +1573,10 @@ msgstr ""
 
 #: .\venv\Lib\site-packages\django\views\csrf.py:45
 msgid ""
-"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
-"including the “Referrer-Policy: no-referrer” header, please remove them. The "
-"CSRF protection requires the “Referer” header to do strict referer checking. "
-"If you’re concerned about privacy, use alternatives like <a "
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or"
+" including the “Referrer-Policy: no-referrer” header, please remove them. "
+"The CSRF protection requires the “Referer” header to do strict referer "
+"checking. If you’re concerned about privacy, use alternatives like <a "
 "rel=\"noreferrer\" …> for links to third-party sites."
 msgstr ""
 
@@ -1249,10 +1687,10 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:208
 #, python-format
 msgid ""
-"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
-"%(version)s/ref/settings/#debug\" target=\"_blank\" "
-"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
-"configured any URLs."
+"You are seeing this page because <a "
+"href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
+"target=\"_blank\" rel=\"noopener\">DEBUG=True</a> is in your settings file "
+"and you have not configured any URLs."
 msgstr ""
 
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:217

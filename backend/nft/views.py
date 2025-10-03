@@ -9,6 +9,7 @@ from django.db.models import Q
 from .models import *
 from .serializers import *
 from .filters import NFTFilter
+from django.utils.translation import gettext_lazy as _
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -52,33 +53,33 @@ class NFTViewSet(viewsets.ModelViewSet):
     def list_for_sale(self, request, pk=None):
         nft = self.get_object()
         if nft.owner != request.user:
-            return Response({'error': 'Only owner can list for sale'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': _('Only owner can list for sale')}, status=status.HTTP_403_FORBIDDEN)
         
         price = request.data.get('price')
         if not price:
-            return Response({'error': 'Price is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('Price is required')}, status=status.HTTP_400_BAD_REQUEST)
         
         nft.price = price
         nft.is_listed = True
         nft.status = 'listed'
         nft.save()
         
-        return Response({'status': 'NFT listed for sale'})
+        return Response({'status': _('NFT listed for sale')})
 
     @action(detail=True, methods=['post'])
     def transfer(self, request, pk=None):
         nft = self.get_object()
         if nft.owner != request.user:
-            return Response({'error': 'Only owner can transfer NFT'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': _('Only owner can transfer NFT')}, status=status.HTTP_403_FORBIDDEN)
         
         new_owner_username = request.data.get('new_owner')
         if not new_owner_username:
-            return Response({'error': 'New owner username is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('New owner username is required')}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             new_owner = User.objects.get(username=new_owner_username)
         except User.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': _('User not found')}, status=status.HTTP_404_NOT_FOUND)
         
         OwnershipHistory.objects.create(
             nft=nft,
@@ -92,7 +93,7 @@ class NFTViewSet(viewsets.ModelViewSet):
         nft.status = 'minted'
         nft.save()
         
-        return Response({'status': 'NFT transferred successfully'})
+        return Response({'status': _('NFT transferred successfully')})
 
     @action(detail=True, methods=['get'])
     def ownership_history(self, request, pk=None):
@@ -142,37 +143,37 @@ class CollectionViewSet(viewsets.ModelViewSet):
     def add_nft(self, request, pk=None):
         collection = self.get_object()
         if collection.owner != request.user:
-            return Response({'error': 'Only collection owner can add NFTs'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': _('Only collection owner can add NFTs')}, status=status.HTTP_403_FORBIDDEN)
         
         nft_id = request.data.get('nft_id')
         if not nft_id:
-            return Response({'error': 'nft_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('nft_id is required')}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             nft = NFT.objects.get(id=nft_id, owner=request.user)
         except NFT.DoesNotExist:
-            return Response({'error': 'NFT not found or you are not the owner'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': _('NFT not found or you are not the owner')}, status=status.HTTP_404_NOT_FOUND)
         
         collection.nfts.add(nft)
-        return Response({'status': 'NFT added to collection'})
+        return Response({'status': _('NFT added to collection')})
 
     @action(detail=True, methods=['post'])
     def remove_nft(self, request, pk=None):
         collection = self.get_object()
         if collection.owner != request.user:
-            return Response({'error': 'Only collection owner can remove NFTs'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': _('Only collection owner can remove NFTs')}, status=status.HTTP_403_FORBIDDEN)
         
         nft_id = request.data.get('nft_id')
         if not nft_id:
-            return Response({'error': 'nft_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('nft_id is required')}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             nft = NFT.objects.get(id=nft_id)
         except NFT.DoesNotExist:
-            return Response({'error': 'NFT not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': _('NFT not found')}, status=status.HTTP_404_NOT_FOUND)
         
         collection.nfts.remove(nft)
-        return Response({'status': 'NFT removed from collection'})
+        return Response({'status': _('NFT removed from collection')})
 
     @action(detail=True, methods=['post'])
     def favorite(self, request, pk=None):
@@ -210,27 +211,27 @@ class AuctionViewSet(viewsets.ModelViewSet):
         auction = self.get_object()
         
         if not auction.active:
-            return Response({'error': 'Auction has ended'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('Auction has ended')}, status=status.HTTP_400_BAD_REQUEST)
         
         if timezone.now() > auction.end_time:
             auction.active = False
             auction.save()
-            return Response({'error': 'Auction has ended'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('Auction has ended')}, status=status.HTTP_400_BAD_REQUEST)
         
         amount = request.data.get('amount')
         if not amount:
-            return Response({'error': 'Bid amount is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('Bid amount is required')}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             amount = float(amount)
         except (TypeError, ValueError):
-            return Response({'error': 'Invalid bid amount'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('Invalid bid amount')}, status=status.HTTP_400_BAD_REQUEST)
         
         if auction.current_bid and amount <= auction.current_bid:
-            return Response({'error': 'Bid must be higher than current bid'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('Bid must be higher than current bid')}, status=status.HTTP_400_BAD_REQUEST)
         
         if amount < auction.start_price:
-            return Response({'error': 'Bid must be at least the start price'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('Bid must be at least the start price')}, status=status.HTTP_400_BAD_REQUEST)
         
         bid = Bid.objects.create(
             auction=auction,
@@ -242,14 +243,14 @@ class AuctionViewSet(viewsets.ModelViewSet):
         auction.highest_bidder = request.user
         auction.save()
         
-        return Response({'status': 'Bid placed successfully'})
+        return Response({'status': _('Bid placed successfully')})
 
     @action(detail=True, methods=['post'])
     def end_auction(self, request, pk=None):
         auction = self.get_object()
         
         if auction.seller != request.user:
-            return Response({'error': 'Only the seller can end the auction'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': _('Only the seller can end the auction')}, status=status.HTTP_403_FORBIDDEN)
         
         auction.active = False
         auction.save()
@@ -267,7 +268,7 @@ class AuctionViewSet(viewsets.ModelViewSet):
                 price=auction.current_bid
             )
         
-        return Response({'status': 'Auction ended successfully'})
+        return Response({'status': _('Auction ended successfully')})
 
 class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -284,7 +285,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         try:
             nft = NFT.objects.get(id=nft_id)
         except NFT.DoesNotExist:
-            return Response({'error': 'NFT not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': _('NFT not found')}, status=status.HTTP_404_NOT_FOUND)
         serializer.save(user=self.request.user, nft=nft)
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -314,7 +315,7 @@ class OfferViewSet(viewsets.ModelViewSet):
         try:
             nft = NFT.objects.get(id=nft_id)
         except NFT.DoesNotExist:
-            return Response({'error': 'NFT not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': _('NFT not found')}, status=status.HTTP_404_NOT_FOUND)
         serializer.save(buyer=self.request.user, nft=nft)
 
     @action(detail=True, methods=['post'])
@@ -322,10 +323,10 @@ class OfferViewSet(viewsets.ModelViewSet):
         offer = self.get_object()
         
         if offer.nft.owner != request.user:
-            return Response({'error': 'Only NFT owner can accept offers'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': _('Only NFT owner can accept offers')}, status=status.HTTP_403_FORBIDDEN)
         
         if offer.status != 'pending':
-            return Response({'error': 'Offer is not pending'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': _('Offer is not pending')}, status=status.HTTP_400_BAD_REQUEST)
         
         offer.nft.owner = offer.buyer
         offer.nft.is_listed = False
@@ -352,7 +353,7 @@ class OfferViewSet(viewsets.ModelViewSet):
         offer = self.get_object()
         
         if offer.nft.owner != request.user:
-            return Response({'error': 'Only NFT owner can reject offers'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': _('Only NFT owner can reject offers')}, status=status.HTTP_403_FORBIDDEN)
         
         offer.status = 'rejected'
         offer.save()
