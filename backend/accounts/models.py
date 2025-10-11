@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
+from django.utils import timezone
+from datetime import timedelta
 
 
 class UserManager(BaseUserManager):
@@ -34,7 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_("Date joined"), auto_now_add=True, null=True, blank=True)
     last_login = models.DateTimeField(_("Last Login"), auto_now=True, null=True, blank=True)
     phone = models.CharField(_("Phone"), max_length=20, blank=True, null=True)
-
+    telegram_chat_id = models.CharField(_("Telegram Chat ID"), max_length=50, blank=True, null=True)
 
     objects = UserManager()
 
@@ -51,3 +54,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.username} ({self.role})"
+    
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    token = models.CharField(max_length=100, unique=True)
+    token_type = models.CharField(max_length=10, choices=[('email', 'Email'), ('phone', 'Phone')])
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return timezone.now() - self.created_at < timedelta(hours=1)
