@@ -1,5 +1,6 @@
 ﻿import { useState } from "react";
 import { Link } from "react-router-dom";
+import Button from "../components/common/button/Button";
 
 export default function HomePage() {
   const [mode, setMode] = useState("collector");
@@ -53,12 +54,12 @@ export default function HomePage() {
           Explore the world's largest digital marketplace for crypto collectibles and non-fungible tokens
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="btn-modern px-8 py-4 rounded-lg text-lg font-medium">
+          <Button className="btn-modern px-8 py-4 rounded-lg text-lg font-medium">
             Explore Collections
-          </button>
-          <button className="glass-card px-8 py-4 rounded-lg text-lg font-medium text-white hover:bg-opacity-80 transition-all">
+          </Button>
+          <Button className="glass-card px-8 py-4 rounded-lg text-lg font-medium text-white hover:bg-opacity-80 transition-all">
             Create NFT
-          </button>
+          </Button>
         </div>
       </section>
 

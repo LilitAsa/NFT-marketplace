@@ -168,6 +168,7 @@
     width: 100%;
   }
 }
+
 @layer components {
   .neon-border {
     border-image: linear-gradient(45deg, #94A3B8, #7DD3FC) 0,5;

@@ -10,6 +10,14 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name', 'last_name',
             'role', 'date_joined', 'last_login', 'phone'
             ]
+        read_only_fields = ['id', 'date_joined', 'last_login', 'username']
+    
+    def update(self, instance, validated_data):
+        # Обновляем только переданные поля
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -32,7 +40,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             first_name=validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', ''),
             role=validated_data.get('role', 'collector'),
-            phone=validated_data.get('phone', '')
+            phone=validated_data.get('phone', ''),
+            telegram_chat_id=validated_data.get('telegramChatId', '')
         )
 
     def validate_password(self, value):
