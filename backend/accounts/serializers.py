@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, UserProfile
 from django.utils.translation import gettext_lazy as _
 
 class UserSerializer(serializers.ModelSerializer):
@@ -18,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -67,3 +68,17 @@ class ChangePasswordSerializer(serializers.Serializer):
         user.set_password(self.validated_data["new_password"])
         user.save()
         return user
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username", read_only=True)
+    email = serializers.EmailField(source="user.email", read_only=True)
+
+    class Meta:
+        model = UserProfile
+        fields = [
+            "username", "email",
+            "display_name", "bio", "avatar", "website", "twitter", "discord",
+            "wallet_address", "nfts_collected", "nfts_created", "followers",
+        ]
+        read_only_fields = ["nfts_collected", "nfts_created", "followers"]

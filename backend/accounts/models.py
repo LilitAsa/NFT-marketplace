@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
+from django.core.validators import URLValidator
 
 
 class UserManager(BaseUserManager):
@@ -63,3 +64,24 @@ class PasswordResetToken(models.Model):
 
     def is_valid(self):
         return timezone.now() - self.created_at < timedelta(hours=1)
+    
+
+def avatar_upload_path(instance, filename):
+    return f"avatars/{instance.user_id}/{filename}"
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    display_name = models.CharField(max_length=80, blank=True)
+    bio = models.TextField(blank=True)
+    avatar = models.ImageField(upload_to=avatar_upload_path, blank=True, null=True)
+    website = models.URLField(blank=True, validators=[URLValidator()])
+    twitter = models.CharField(max_length=50, blank=True)
+    wallet_address = models.CharField(max_length=100, blank=True, db_index=True)
+
+    # агрегированные счетчики (опционально, можно денормализовать)
+    nfts_collected = models.PositiveIntegerField(default=0)
+    nfts_created = models.PositiveIntegerField(default=0)
+    followers = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"Profile<{self.user_id}>"

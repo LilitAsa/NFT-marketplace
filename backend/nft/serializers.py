@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from .models import *
 from accounts.models import User
+from django.conf import settings
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,6 +50,32 @@ class NFTSerializer(serializers.ModelSerializer):
 
     def get_comments_count(self, obj):
         return obj.comments.count()
+
+ 
+class NFTListSerializer(serializers.ModelSerializer):
+    """
+    Лёгкий сериализатор для списка NFT на странице профиля.
+    Возвращает owner/creator как СТРОКИ (username), чтобы избежать вложенных UserSerializer.
+    """
+    owner = serializers.CharField(source="owner.username", read_only=True)
+    creator = serializers.CharField(source="creator.username", read_only=True)
+    image_src = serializers.SerializerMethodField()
+
+    class Meta:
+        model = NFT
+        fields = ["id", "name", "image", "price", "currency", "owner", "creator", "image_src"]
+    
+    def get_image_src(self, obj):
+        request = self.context.get("request")
+        if obj.image_file:
+            url = obj.image_file.url
+            return request.build_absolute_uri(url) if request else url
+        if obj.image:
+            return obj.image
+        # плейсхолдер по умолчанию
+        placeholder = settings.MEDIA_URL + "nft_images/placeholder-nft.png"
+        return request.build_absolute_uri(placeholder) if request else placeholder
+
 
 class NFTCreateSerializer(serializers.ModelSerializer):
     class Meta:

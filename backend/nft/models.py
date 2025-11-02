@@ -41,6 +41,7 @@ class NFT(models.Model):
     description = models.TextField(_('Description'), blank=True)
     image = models.URLField(_('image'), blank=True)
     external_url = models.URLField(_('external url'), blank=True)
+    image_file = models.ImageField(_('image file'), upload_to='nft_images/', null=True, blank=True)
     
     owner = models.ForeignKey(
         User, 

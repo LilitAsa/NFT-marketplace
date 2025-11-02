@@ -9,6 +9,8 @@ export default function RegisterPage() {
   const navigate = useNavigate();
 
   const handleRegister = async (formData) => {
+    console.log(formData);
+    
     setIsLoading(true);
     setError("");
 
@@ -47,6 +49,13 @@ export default function RegisterPage() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Неверный формат email");
+      setIsLoading(false);
+      return;
+    }
+
+    // Валидация номера телефона
+    if (formData.phone && !/^\+?\d{10,15}$/.test(formData.phone)) {
+      setError("Введите корректный номер телефона");
       setIsLoading(false);
       return;
     }

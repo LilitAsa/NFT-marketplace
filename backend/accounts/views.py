@@ -1,20 +1,26 @@
 import requests
+import re
+from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
-from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, mixins, permissions, parsers
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
-from .models import PasswordResetToken
-from .models import User
+from rest_framework.decorators import action
+from .models import User, UserProfile, PasswordResetToken
 from .serializers import *
 from .utils.telegram_notifier import send_telegram_message
-import re
+from .serializers import UserProfileSerializer
+from nft.models import NFT
+from nft.serializers import NFTListSerializer
+from core.pagination import DefaultPageNumberPagination
 
 
 class RegisterView(generics.CreateAPIView):
@@ -60,6 +66,7 @@ class MeView(APIView):
     def delete(self, request):
         request.user.delete()
         return Response({"message": _("Пользователь удален")}, status=204)
+
     
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
@@ -265,4 +272,77 @@ class PasswordResetConfirmView(APIView):
         reset_token.delete()
 
         return Response({"message": "Пароль успешно изменён."}, status=200)
+    
+
+class UsersViewSet(mixins.RetrieveModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
+    """
+    /api/users/            -> список пользователей (если нужно)
+    /api/users/<username>/ -> профиль (если хочешь возвращать базовые данные)
+    /api/users/<username>/nfts?type=owned|created&page=1&page_size=24
+    """
+    queryset = User.objects.all()
+    serializer_class =  UserSerializer
+    permission_classes = [permissions.AllowAny]
+    lookup_field = "username"
+
+    @action(detail=True, methods=["get"], url_path="nfts", permission_classes=[permissions.AllowAny])
+    def nfts(self, request, username=None):
+        """
+        GET /api/users/<username>/nfts?type=owned|created&page=1&page_size=24
+        """
+        user = get_object_or_404(User, username=username)
+        typ = request.query_params.get("type", "owned").lower()
+
+        if typ == "created":
+            qs = NFT.objects.filter(creator=user)
+        else:
+            # по умолчанию owned
+            qs = NFT.objects.filter(owner=user)
+
+        # порядок (пример: последние созданные сверху)
+        qs = qs.order_by("-id")
+
+        paginator = DefaultPageNumberPagination()
+        page = paginator.paginate_queryset(qs, request)
+        ser = NFTListSerializer(page, many=True, context={"request": request})
+        return paginator.get_paginated_response(ser.data)
+    
+
+class IsSelfOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # редактировать профиль может только владелец
+        return request.method in permissions.SAFE_METHODS or obj.user_id == request.user.id
+
+class ProfileViewSet(mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     viewsets.GenericViewSet):
+    queryset = UserProfile.objects.select_related("user")
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    parser_classes = [parsers.JSONParser, parsers.FormParser, parsers.MultiPartParser]
+
+    lookup_field = "user__username"   # /api/profile/<username>/
+
+    def get_permissions(self):
+        if self.action in ["partial_update", "update", "me", "upload_avatar"]:
+            return [permissions.IsAuthenticated(), IsSelfOrReadOnly()]
+        return super().get_permissions()
+
+    @action(detail=False, methods=["get"], url_path="me", permission_classes=[permissions.IsAuthenticated])
+    def me(self, request):
+        profile = request.user.profile
+        return Response(self.get_serializer(profile).data)
+
+    @action(detail=True, methods=["post"], url_path="avatar")
+    def upload_avatar(self, request, **kwargs):
+        profile = self.get_object()
+        self.check_object_permissions(request, profile)
+        file = request.FILES.get("avatar")
+        if not file:
+            return Response({"detail": "avatar file is required"}, status=400)
+        profile.avatar = file
+        profile.save(update_fields=["avatar"])
+        return Response(self.get_serializer(profile).data)
     

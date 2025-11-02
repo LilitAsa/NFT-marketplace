@@ -5,7 +5,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns 
 from django.views.i18n import set_language
+from rest_framework.routers import DefaultRouter
+from accounts.views import ProfileViewSet, UsersViewSet
 
+
+router = DefaultRouter()
+router.register(r"profile", ProfileViewSet, basename="profile")
+router.register(r'users', UsersViewSet, basename='user')
 
 urlpatterns = [
     path('rosetta/', include('rosetta.urls')),
@@ -13,7 +19,9 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('api/accounts/', include('accounts.urls')),
     path('api/nft/', include('nft.urls')),
-
+    path("api/", include(router.urls)),          # /api/users/<username>/nfts
+    path("api/auth/", include("accounts.urls")), # твои register/login/me/... из accounts/urls.py
+    # path('api/users/<str:username>/nfts/', UserNFTsView.as_view(), name='user-nfts'),
 ] + debug_toolbar_urls()
 
 urlpatterns += i18n_patterns(
