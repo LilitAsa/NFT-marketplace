@@ -7,37 +7,10 @@ from django.utils import timezone
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.permissions import AllowAny
 from .models import *
 from .serializers import *
 from .filters import NFTFilter
 
-
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer  # your user serializer
-    lookup_field = 'username'
-    lookup_value_regex = r'[\w.@+-]+'
-
-    @action(detail=True, methods=['get'], url_path='nfts', permission_classes=[AllowAny])
-    def nfts(self, request, username=None):
-        user = self.get_object()
-        nft_type = request.query_params.get('type', 'owned')
-
-        qs = NFT.objects.select_related('owner', 'creator', 'category') \
-                        .prefetch_related('tags', 'likes', 'comments')
-
-        if nft_type == 'owned':
-            qs = qs.filter(owner=user)
-        elif nft_type == 'created':
-            qs = qs.filter(creator=user)
-        else:
-            qs = qs.filter(owner=user)
-
-        paginator = UserNFTsPagination()
-        page = paginator.paginate_queryset(qs.order_by('-created_at'), request)
-        ser = NFTSerializer(page, many=True, context={'request': request})
-        return paginator.get_paginated_response(ser.data)
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):

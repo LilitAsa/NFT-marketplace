@@ -4,7 +4,6 @@ from .models import *
 from django.utils.html import format_html
 
 
-
 class OwnershipHistoryInline(admin.TabularInline):
     model = OwnershipHistory
     extra = 0
@@ -12,22 +11,36 @@ class OwnershipHistoryInline(admin.TabularInline):
 
 @admin.register(NFT)
 class NFTAdmin(admin.ModelAdmin):
-    list_display = ['name', 'token_id', 'owner', 'creator', 'status', 'is_listed', 'price', 'created_at', 'image_file']
+    list_display = ('preview_small', 'name', 'token_id', 'owner', 'creator',
+                    'status', 'is_listed', 'price', 'created_at', 'image_file')
+    list_display_links = ('preview_small', 'name') # по клику открывается объект
     list_filter = ['status', 'is_listed', 'blockchain', 'token_standard', 'category', 'created_at']
     search_fields = ['name', 'token_id', 'owner__username', 'creator__username']
-    readonly_fields = ['created_at', 'updated_at', 'minted_at']
+    readonly_fields = ['created_at', 'updated_at', 'minted_at', 'image_preview']
+    
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'token_id',
+                       'owner', 'creator',
+                       'image_preview',            # <<< вот здесь превью
+                       'image', 'external_url', 'image_file',
+                       'description')
+        }),
+        ('Marketplace', {
+            'fields': (('price', 'currency'), 'is_listed', 'status')
+        }),
+        ('On-chain', {
+            'fields': ('contract_address', 'blockchain', 'token_standard')
+        }),
+        ('Meta', {
+            'fields': ('created_at', 'updated_at', 'minted_at')
+        }),
+    )
+    
     filter_horizontal = ['tags']  
     inlines = [OwnershipHistoryInline] 
-    # fields = (
-    #     ('name', 'token_id'),
-    #     ('owner', 'creator'),
-    #     ('image', 'image_file'),
-    #     ('description', 'external_url'),
-    #     ('price', 'currency', 'is_listed', 'status'),
-    #     ('contract_address', 'blockchain', 'token_standard'),
-    # )
     
- # Preview for edit page
+    # Preview for edit page
     def image_preview(self, obj):
         src = ""
         if obj.image_file:
@@ -59,7 +72,6 @@ class NFTAdmin(admin.ModelAdmin):
 
     preview_small.short_description = ""
     
-
 
 @admin.register(Collection)
 class CollectionAdmin(admin.ModelAdmin):

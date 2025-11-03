@@ -1,40 +1,55 @@
+# accounts/views_auth_cookie.py
 from django.conf import settings
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
 REFRESH_COOKIE = "refresh_token"
-COOKIE_KW = dict(httponly=True, secure=False, samesite="Lax", path="/", max_age=60*60*24*14)
+COOKIE_KW = dict(
+    httponly=True,
+    secure=False,            # True в проде
+    samesite="Lax",          # "None" в проде за proxy/https
+    path="/",
+    max_age=60*60*24*14,
+)
 
 class CookieLoginView(TokenObtainPairView):
+    # POST /api/accounts/login/
     def post(self, request, *args, **kwargs):
         resp = super().post(request, *args, **kwargs)
-        refresh = resp.data.pop("refresh", None)
+        if resp.status_code != 200:
+            return resp
+        refresh = resp.data.pop("refresh", None)  # УБИРАЕМ из body
         if refresh:
             resp.set_cookie(REFRESH_COOKIE, refresh, **COOKIE_KW)
         return resp
 
 class CookieRefreshView(TokenRefreshView):
+    # POST /api/accounts/token/refresh/ (пустое body)
+    serializer_class = TokenRefreshSerializer
+
     def post(self, request, *args, **kwargs):
         data = request.data.copy()
         data.setdefault("refresh", request.COOKIES.get(REFRESH_COOKIE))
         if not data["refresh"]:
-            return Response({"detail": "No refresh cookie"}, status=401)
+            return Response({"detail": "No refresh cookie"}, status=status.HTTP_401_UNAUTHORIZED)
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        resp = Response(serializer.validated_data, status=200)
-        if "refresh" in serializer.validated_data:
-            resp.set_cookie(REFRESH_COOKIE, serializer.validated_data["refresh"], **COOKIE_KW)
+        payload = dict(serializer.validated_data)
+
+        # НЕ возвращаем refresh в body
+        new_refresh = payload.pop("refresh", None)
+        resp = Response(payload, status=status.HTTP_200_OK)
+
+        if new_refresh:
+            resp.set_cookie(REFRESH_COOKIE, new_refresh, **COOKIE_KW)
         return resp
 
 class CookieLogoutView(APIView):
     def post(self, request):
-        r = request.COOKIES.get(REFRESH_COOKIE)
-        if r:
-            try: RefreshToken(r).blacklist()
-            except Exception: pass
         resp = Response({"message": "Logged out"}, status=205)
         resp.delete_cookie(REFRESH_COOKIE, path="/")
         return resp
