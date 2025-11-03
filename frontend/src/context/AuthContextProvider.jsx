@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 import axios from "axios";
+import { api } from "../api/client";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -62,9 +63,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await api.post("/accounts/logout/"); // сервер удалит refresh_cookie
+    } catch (e) {
+      console.warn("logout api failed, ignore", e);
+    }
     localStorage.removeItem("access");
+    delete api.defaults.headers.common.Authorization; 
     setUser(null);
+    setLoading(false);
   };
 
   const updateUser = (updatedData) => {
