@@ -1,96 +1,87 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { api, setLoggedOut } from "../api/client";
 import { AuthContext } from "./AuthContext";
-import axios from "axios";
-import { api } from "../api/client";
 
-export const AuthProvider = ({ children }) => {
+const roleHome = (user) => {
+  if (!user) return "/login";
+  switch (user.role) {
+    case "admin": return "/admin";
+    case "pro":   return "/pro";
+    case "collector":
+    default:      return `/u/${user.username}`;
+  }
+};
+
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  console.log('provider', user); //provider null
 
-  // Проверяем, есть ли сохраненный токен при загрузке
   useEffect(() => {
-    const token = localStorage.getItem("access");
-    if (token) {
-      // Проверяем валидность токена
-      checkAuthStatus();
-    } else {
-      setLoading(false);
-    }
+    (async () => {
+      try {
+        const hasAccess = !!localStorage.getItem("access");
+        if (hasAccess) {
+          const { data } = await api.get("/accounts/me/"); // без skipAuthRefresh
+          setUser(data);
+          return;
+        }
+        // access нет — пробуем cookie-refresh
+        try {
+          const r = await api.post("/accounts/token/refresh/", {});
+          const newAccess = r.data?.access;
+          if (newAccess) {
+            localStorage.setItem("access", newAccess);
+            api.defaults.headers.common.Authorization = `Bearer ${newAccess}`;
+            const { data } = await api.get("/accounts/me/");
+            setUser(data);
+            return;
+          }
+        } catch {console.log("catch refresh");}
+        setUser(null);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
-  const checkAuthStatus = async () => {
+  const login = async ({ username, password }) => {
     try {
-      const token = localStorage.getItem("access");
-      const response = await axios.get("http://127.0.0.1:8000/api/accounts/me/", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      console.log("📦 Данные профиля из бэкенда:", response.data);
-      setUser(response.data);
-    } catch {
-      // Токен недействителен, очищаем его
+      setLoggedOut(false); // разрешаем рефреши
+      delete api.defaults.headers.common.Authorization;
       localStorage.removeItem("access");
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const login = async (formData) => {
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/api/accounts/login/", {
-        username: formData.username,
-        password: formData.password
-      });
-      
-      localStorage.setItem("access", response.data.access);
-      
-      // Получаем данные пользователя
-      const profileResponse = await axios.get("http://127.0.0.1:8000/api/accounts/me/", {
-        headers: { Authorization: `Bearer ${response.data.access}` }
-      });
-      
-      setUser(profileResponse.data);
-      return { success: true };
-    } catch (error) {
-      console.error("Login error:", error);
-      if (error.response?.status === 401) {
-        return { success: false, error: "Неверное имя пользователя или пароль" };
-      } else if (error.response?.status === 400) {
-        return { success: false, error: "Проверьте правильность введенных данных" };
-      } else {
-        return { success: false, error: "Ошибка входа. Попробуйте позже" };
+      const { data } = await api.post("/accounts/login/", { username, password });
+      if (data?.access) {
+        localStorage.setItem("access", data.access);
+        api.defaults.headers.common.Authorization = `Bearer ${data.access}`;
       }
+      if (data?.user) setUser(data.user);
+      return { success: true, user: data.user };
+    } catch (e) {
+      return { success: false, error: e.response?.data || "Login failed" };
     }
   };
 
   const logout = async () => {
-    try {
-      await api.post("/accounts/logout/"); // сервер удалит refresh_cookie
-    } catch (e) {
-      console.warn("logout api failed, ignore", e);
+    try { await api.post("/accounts/logout/"); } catch {
+      console.log('catch logout');
     }
     localStorage.removeItem("access");
-    delete api.defaults.headers.common.Authorization; 
+    delete api.defaults.headers.common.Authorization;
+    setLoggedOut(true);
     setUser(null);
-    setLoading(false);
   };
 
-  const updateUser = (updatedData) => {
-    setUser((prev) => ({
-      ...prev,
-      ...updatedData,
-    }));
-  };
+  const updateUser = (patch) => setUser((u) => (u ? { ...u, ...patch } : u));
 
   return (
-    <AuthContext.Provider 
-      value={{
-        user, login, 
-        logout, setUser, 
-        loading, updateUser 
-      }}
-    >
+    <AuthContext.Provider value={{ user, loading, login, logout, updateUser, roleHome }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
+
+export default AuthProvider;

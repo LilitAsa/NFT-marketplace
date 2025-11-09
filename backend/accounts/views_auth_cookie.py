@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from .serializers_auth import CookieTokenObtainPairSerializer
 
 REFRESH_COOKIE = "refresh_token"
 COOKIE_KW = dict(
@@ -16,7 +17,7 @@ COOKIE_KW = dict(
 )
 
 class CookieLoginView(TokenObtainPairView):
-    # POST /api/accounts/login/
+    serializer_class = CookieTokenObtainPairSerializer
     def post(self, request, *args, **kwargs):
         resp = super().post(request, *args, **kwargs)
         if resp.status_code != 200:
@@ -43,6 +44,8 @@ class CookieRefreshView(TokenRefreshView):
         # НЕ возвращаем refresh в body
         new_refresh = payload.pop("refresh", None)
         resp = Response(payload, status=status.HTTP_200_OK)
+        print("DEBUG refresh cookie:", bool(request.COOKIES.get("refresh_token")))
+
 
         if new_refresh:
             resp.set_cookie(REFRESH_COOKIE, new_refresh, **COOKIE_KW)

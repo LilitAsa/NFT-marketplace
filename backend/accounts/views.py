@@ -6,6 +6,7 @@ from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import status
 from rest_framework import generics
 from rest_framework import viewsets, mixins, permissions, parsers
@@ -44,6 +45,7 @@ class ProfileView(APIView):
         return Response(serializer.data)
 
 class MeView(APIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):

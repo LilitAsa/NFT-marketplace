@@ -3,39 +3,36 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import LoginForm from "../components/auth/LoginForm";
 
-export default function LoginPage() {
-  const { login, user, loading } = useContext(AuthContext);
+export default function LoginPage({ onSuccess }) {
+  const { login, user, loading, roleHome } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Если пользователь уже авторизован, перенаправляем в профиль
   useEffect(() => {
     if (user && !loading) {
-      navigate("/profile");
+      navigate(roleHome(user), { replace: true });
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, roleHome]);
 
-  const handleLogin = async (formData, mode) => {
+  const handleLogin = async ({ username, password }) => {
     setIsLoading(true);
     setError("");
-    
     try {
-      const result = await login(formData, mode);
-      if (result.success) {
-        navigate("/profile");
+      const res = await login({ username, password });
+      if (res.success) {
+        onSuccess?.(res.user);
+        navigate(roleHome(res.user), { replace: true });
       } else {
-        setError(result.error);
+        setError(res.error || "Ошибка входа");
       }
-    } catch (err) {
-      console.error("Login error:", err);
+    } catch (e) {
       setError("Произошла ошибка при входе");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Показываем загрузку, если проверяем авторизацию
   if (loading) {
     return (
       <div className="dark-bg min-h-screen flex items-center justify-center">
@@ -49,11 +46,7 @@ export default function LoginPage() {
 
   return (
     <div className="dark-bg min-h-screen flex items-center justify-center p-4">
-      <LoginForm 
-        onSubmit={handleLogin}
-        loading={isLoading}
-        error={error}
-      />
+      <LoginForm onSubmit={handleLogin} loading={isLoading} error={error} />
     </div>
   );
 }
