@@ -40,10 +40,10 @@ export default function ProfilePage() {
     return () => { cancelled = true; };
   }, [usernameFromRoute, navigate]);
 
-  const handleLogout = async () => {
-    await logout();
-    navigate("/"); // возвращаем на главную страницу
-  };
+  const handleLogout = async () => { 
+    await logout(); 
+    navigate("/", { replace: true });
+  }
 
   if (loading) return <div className="p-6">Загрузка профиля…</div>;
   if (!username) return <div className="p-6">Нужно войти</div>;
@@ -55,7 +55,7 @@ export default function ProfilePage() {
         {user && (
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition"
+           className="px-3 py-2 rounded-lg text-white hover:text-blue-300"
           >
             Выйти
           </button>

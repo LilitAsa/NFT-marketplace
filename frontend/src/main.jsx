@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContextProvider";
 import RoleRoute from "./routes/RoleRoute.jsx";
 
+import TopNav from "./components/layout/TopNav.jsx";
 import HomePage from "./pages/Home.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import LoginWithRedirect from "./components/auth/LoginWithRedirect.jsx";
@@ -18,8 +19,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
       <BrowserRouter>
+        <TopNav />    
         <Suspense fallback={<div className="p-6">Загрузка…</div>}>
           <Routes>
+
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginWithRedirect />} />
 

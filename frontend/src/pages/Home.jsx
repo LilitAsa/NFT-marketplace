@@ -1,49 +1,9 @@
-﻿import { useState } from "react";
-import { Link } from "react-router-dom";
-import Button from "../components/common/button/Button";
+﻿import Button from "../components/common/button/Button";
 
 export default function HomePage() {
-  const [mode, setMode] = useState("collector");
 
   return (
-    <div className="dark-bg min-h-screen">
-      {/* Header */}
-      <header className="glass-card mx-4 mt-4 p-4 neon-border">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-bold gradient-text">NFT Marketplace</h1>
-            <div className="mode-switcher flex">
-              <button
-                onClick={() => setMode("collector")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium mode-button ${
-                  mode === "collector" ? "mode-active" : "text-gray-400"
-                }`}
-              >
-                Collector
-              </button>
-              <button
-                onClick={() => setMode("pro")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium mode-button ${
-                  mode === "pro" ? "mode-active" : "text-gray-400"
-                }`}
-              >
-                Pro
-              </button>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button className="text-gray-400 hover:text-white transition-colors">
-              Wallet
-            </button>
-            <Link 
-              to="/login" 
-              className="btn-modern px-6 py-2 rounded-lg text-sm font-medium"
-            >
-              Login
-            </Link>
-          </div>
-        </div>
-      </header>
+    <div className="dark-bg min-h-screen pt-20">
 
       {/* Hero Section */}
       <section className="text-center py-20 px-4">
