@@ -7,6 +7,8 @@ class AccountsConfig(AppConfig):
     
     def ready(self):
         try:
-            import accounts.signals  
+            from . import signals
+            print("Signals imported successfully.")
         except Exception:
             pass
+        

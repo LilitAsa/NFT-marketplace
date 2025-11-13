@@ -22,6 +22,7 @@ from .serializers import UserProfileSerializer
 from nft.models import NFT
 from nft.serializers import NFTListSerializer
 from core.pagination import DefaultPageNumberPagination
+from accounts.permissions import IsProOrAdmin
 
 
 class RegisterView(generics.CreateAPIView):
@@ -317,6 +318,7 @@ class IsSelfOrReadOnly(permissions.BasePermission):
         # редактировать профиль может только владелец
         return request.method in permissions.SAFE_METHODS or obj.user_id == request.user.id
 
+
 class ProfileViewSet(mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin,
                      viewsets.GenericViewSet):
@@ -347,4 +349,15 @@ class ProfileViewSet(mixins.RetrieveModelMixin,
         profile.avatar = file
         profile.save(update_fields=["avatar"])
         return Response(self.get_serializer(profile).data)
-    
+ 
+
+class ProStatsView(APIView):
+    permission_classes = [IsAuthenticated, IsProOrAdmin]
+
+    def get(self, request):
+
+        return Response({
+            "total_sales": 0,
+            "nfts_listed": 0,
+            "favourite_chain": "Ethereum",
+        })

@@ -27,6 +27,7 @@ export default function LoginPage({ onSuccess }) {
         setError(res.error || "Ошибка входа");
       }
     } catch (e) {
+      console.error("Ошибка при входе:", e);
       setError("Произошла ошибка при входе");
     } finally {
       setIsLoading(false);
@@ -45,7 +46,7 @@ export default function LoginPage({ onSuccess }) {
   }
 
   return (
-    <div className="dark-bg min-h-screen flex items-center justify-center p-4">
+    <div className="dark-bg min-h-screen flex items-center justify-center mt-20 p-4">
       <LoginForm onSubmit={handleLogin} loading={isLoading} error={error} />
     </div>
   );

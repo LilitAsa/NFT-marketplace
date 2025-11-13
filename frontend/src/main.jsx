@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import LoginWithRedirect from "./components/auth/LoginWithRedirect.jsx";
 
 import "./styles/index.css";
+import RegisterPage from "./pages/Register.jsx";
 
 const ProDashboard = lazy(() => import("./pages/pro/Dashboard.jsx"));
 const AdminPanel  = lazy(() => import("./pages/admin/Panel.jsx"));
@@ -25,6 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginWithRedirect />} />
+            <Route path="/register" element={<RegisterPage/>} />
 
             <Route
               path="/profile"

@@ -9,10 +9,11 @@ export default function RegisterPage() {
   const navigate = useNavigate();
 
   const handleRegister = async (formData) => {
-    console.log(formData);
-    
     setIsLoading(true);
     setError("");
+
+    
+
 
     // Валидация формы
     if (!formData.username.trim()) {
@@ -61,7 +62,6 @@ export default function RegisterPage() {
     }
 
     try {
-      // Подготавливаем данные для отправки (убираем confirmPassword)
       const { confirmPassword: _, ...registrationData } = formData;
       
       const response = await axios.post("http://127.0.0.1:8000/api/accounts/register/", registrationData);

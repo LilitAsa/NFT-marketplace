@@ -20,19 +20,20 @@ class UserManager(BaseUserManager):
     def create_superuser(self, username, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        return self.create_user(username, email, password,role="pro", **extra_fields)
+        return self.create_user(username, email, password,role="admin", **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
         ("collector", _("Collector")),
         ("pro", _("Pro User")),
+        ("admin", _("Administrator")),
     ]
     
     username = models.CharField(_("Username"), max_length=150, unique=True)
     email = models.EmailField(_("Email"), unique=True)
     role = models.CharField(_("Role"), max_length=20, choices=ROLE_CHOICES, default="collector")
-    is_active = models.BooleanField(_("Is active"), default=True, null=True, blank=True)
-    is_staff = models.BooleanField(_("Is staff"), default=False, null=True, blank=True)
+    is_active = models.BooleanField(_("Is active"), default=True)
+    is_staff = models.BooleanField(_("Is staff"), default=False)
     first_name = models.CharField(_("First name"),max_length=150, blank=True, null=True)
     last_name = models.CharField(_("Last name"), max_length=150, blank=True, null=True)
     date_joined = models.DateTimeField(_("Date joined"), auto_now_add=True, null=True, blank=True)
@@ -57,7 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.username} ({self.role})"
     
 class PasswordResetToken(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=100, unique=True)
     token_type = models.CharField(max_length=10, choices=[('email', 'Email'), ('phone', 'Phone')])
     created_at = models.DateTimeField(auto_now_add=True)

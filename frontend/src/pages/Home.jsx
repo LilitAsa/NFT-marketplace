@@ -1,6 +1,10 @@
 ﻿import Button from "../components/common/button/Button";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 export default function HomePage() {
+  const { user } = useContext(AuthContext);
 
   return (
     <div className="dark-bg min-h-screen pt-20">
@@ -74,6 +78,68 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Pro */}
+      <section className="py-16 px-4 bg-white/5 neon-border">
+        <div className="max-w-6xl mx-auto text-center">
+          <h3 className="text-3xl font-bold text-white mb-6">
+            Upgrade to Pro
+          </h3>
+          <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+            Get access to advanced trading tools, analytics, and priority support by upgrading to a Pro account.
+          </p>
+          <Button className="btn-modern px-8 py-4 rounded-lg text-lg font-medium">
+            Go to Pro Dashboard
+          </Button>
+        </div>
+      </section>
+
+      {/* Why Go Pro */}
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h3 className="text-3xl font-bold text-center text-white mb-12">
+            Why Go Pro?
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="glass-card p-6 neon-border">
+              <h4 className="text-xl font-bold text-white mb-4">Advanced Analytics</h4>
+              <p className="text-gray-400">
+                Gain insights into market trends, NFT performance, and trading strategies with our comprehensive analytics tools.
+              </p>
+            </div>
+            <div className="glass-card p-6 neon-border">
+              <h4 className="text-xl font-bold text-white mb-4">Priority Support</h4>
+              <p className="text-gray-400">
+                Enjoy priority access to our support team for faster resolution of your queries and issues. 
+              </p>
+            </div>
+            <div className="glass-card p-6 neon-border">
+              <h4 className="text-xl font-bold text-white mb-4">Exclusive Tools</h4>
+              <p className="text-gray-400">
+                Access exclusive trading tools and features designed to enhance your NFT trading experience.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section> 
+
+      {user && (user.role === "pro" || user.role === "admin") && (
+        <section className="py-16 px-4">
+          <div className="max-w-6xl mx-auto glass-card p-6 neon-border">
+            <h3 className="text-3xl font-bold text-white mb-4">
+              Pro инструменты
+            </h3>
+            <p className="text-gray-400 mb-4">
+              Расширенная аналитика, быстрый листинг, экспорт сделок и др.
+            </p>
+            <Link to="/pro">
+              <Button className="btn-modern px-8 py-3 rounded-lg font-medium">
+                Перейти в Pro Dashboard
+              </Button>
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="glass-card mx-4 mb-4 p-6 neon-border">

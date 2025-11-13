@@ -26,7 +26,31 @@ export default function TopNav() {
       <div className="flex items-center justify-between">
         {/* left */}
         <div className="flex items-center gap-4">
-          <Link to="/" className="text-2xl font-bold gradient-text">NFT Marketplace</Link>
+          <Link to="/" onClick={()=>navigate(user?roleHome(user):"/")} className="text-2xl font-bold gradient-text">NFT Marketplace</Link>
+          <div className="flex items-center space-x-4">
+            {/* если вошёл и pro/admin — показать кнопку Pro */}
+            {user && (user.role === "pro" || user.role === "admin") && (
+              <Link
+                to="/pro"
+                className="glass-card px-4 py-2 rounded-lg text-sm font-medium text-purple-300 hover:text-white"
+              >
+                Pro Dashboard
+              </Link>
+            )}
+
+            {/* если admin — ещё кнопка Admin */}
+            {user && user.role === "admin" && (
+              <Link
+                to="/admin"
+                className="glass-card px-4 py-2 rounded-lg text-sm font-medium text-red-300 hover:text-white"
+              >
+                Admin
+              </Link>
+            )}
+
+           
+          </div>
+
           {/* быстрые ссылки */}
           <nav className="hidden sm:flex items-center gap-3 text-sm text-gray-300">
             <Link to="/" className="hover:text-white">Home</Link>
@@ -49,13 +73,22 @@ export default function TopNav() {
                 @{user.username}
               </Link>
 
-              {/* Кнопка “Профиль” ведёт на /profile (перенаправит на /u/:me) */}
-              <Link
-                to="/profile"
-                className="px-3 py-2 rounded-lg btn-modern"
-              >
-                Мой профиль
-              </Link>
+                {/* если не вошёл — Login, если вошёл — Профиль */}
+              {!user ? (
+                <Link
+                  to="/login"
+                  className="btn-modern px-6 py-2 rounded-lg text-sm font-medium"
+                >
+                  Login
+                </Link>
+              ) : (
+                <Link
+                  to={`/u/${user.username}`}
+                  className="btn-modern px-6 py-2 rounded-lg text-sm font-medium"
+                >
+                  Мой профиль
+                </Link>
+              )}
 
               <button
                 onClick={handleLogout}

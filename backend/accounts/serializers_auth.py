@@ -11,9 +11,7 @@ class CookieTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
         data = super().validate(attrs)
-        # НЕ возвращаем refresh (он пойдёт в HttpOnly cookie)
         user = self.user
-        data.pop('refresh', None)
         # сразу вернём объект user для фронта
         data['user'] = {
             "id": user.id,
@@ -25,3 +23,4 @@ class CookieTokenObtainPairSerializer(TokenObtainPairSerializer):
             "role": user.role,
         }
         return data
+

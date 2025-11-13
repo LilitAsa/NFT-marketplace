@@ -15,6 +15,10 @@ const RegisterForm = ({ onSubmit, loading = false, error = "" }) => {
     telegramChatId: "",
   });
   const [mode, setMode] = useState("collector");
+  const setModeAndRole = (next) => {
+    setMode(next);
+    setFormData(prev => ({ ...prev, role: next === "pro" ? "pro" : "collector" }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +34,7 @@ const RegisterForm = ({ onSubmit, loading = false, error = "" }) => {
   };
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md mt-20 mx-auto p-6">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold gradient-text mb-2 cursor-pointer">
@@ -44,7 +48,7 @@ const RegisterForm = ({ onSubmit, loading = false, error = "" }) => {
       {/* Mode Switcher */}
       <div className="mode-switcher flex mb-6">
         <button
-          onClick={() => setMode("collector")}
+          onClick={() => setModeAndRole("collector")}
           className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium mode-button ${
             mode === "collector" ? "mode-active" : "text-gray-400"
           }`}
@@ -52,7 +56,7 @@ const RegisterForm = ({ onSubmit, loading = false, error = "" }) => {
           Collector Mode
         </button>
         <button
-          onClick={() => setMode("pro")}
+          onClick={() => setModeAndRole("pro")}
           className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium mode-button ${
             mode === "pro" ? "mode-active" : "text-gray-400"
           }`}

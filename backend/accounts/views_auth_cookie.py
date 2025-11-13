@@ -22,13 +22,12 @@ class CookieLoginView(TokenObtainPairView):
         resp = super().post(request, *args, **kwargs)
         if resp.status_code != 200:
             return resp
-        refresh = resp.data.pop("refresh", None)  # УБИРАЕМ из body
+        refresh = resp.data.pop("refresh", None)  # убираем из body
         if refresh:
-            resp.set_cookie(REFRESH_COOKIE, refresh, **COOKIE_KW)
+            resp.set_cookie("refresh_token", refresh, **COOKIE_KW)
         return resp
 
 class CookieRefreshView(TokenRefreshView):
-    # POST /api/accounts/token/refresh/ (пустое body)
     serializer_class = TokenRefreshSerializer
 
     def post(self, request, *args, **kwargs):

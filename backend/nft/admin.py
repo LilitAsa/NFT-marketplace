@@ -12,8 +12,8 @@ class OwnershipHistoryInline(admin.TabularInline):
 @admin.register(NFT)
 class NFTAdmin(admin.ModelAdmin):
     list_display = ('preview_small', 'name', 'token_id', 'owner', 'creator',
-                    'status', 'is_listed', 'price', 'created_at', 'image_file')
-    list_display_links = ('preview_small', 'name') # по клику открывается объект
+                    'status', 'is_listed', 'price', 'created_at', 'preview_small')
+    list_display_links = ('preview_small', 'name') 
     list_filter = ['status', 'is_listed', 'blockchain', 'token_standard', 'category', 'created_at']
     search_fields = ['name', 'token_id', 'owner__username', 'creator__username']
     readonly_fields = ['created_at', 'updated_at', 'minted_at', 'image_preview']
@@ -22,7 +22,7 @@ class NFTAdmin(admin.ModelAdmin):
         (None, {
             'fields': ('name', 'token_id',
                        'owner', 'creator',
-                       'image_preview',            # <<< вот здесь превью
+                       'image_preview',           
                        'image', 'external_url', 'image_file',
                        'description')
         }),
